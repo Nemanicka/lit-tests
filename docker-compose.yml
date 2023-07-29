@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  psql:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+  percona:
+    image: percona
+    container_name: percona
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+        #- MYSQL_VERSION=5.7.21
+        - MYSQL_ROOT_PASSWORD=pass
+        - MYSQL_ROOT_HOST=mysql
+        - MYSQL_DATABASE=percona
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=pass
